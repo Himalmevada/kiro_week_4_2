@@ -61,13 +61,7 @@ export class BootScene extends Phaser.Scene {
     this.load.image('meteorGrey2', '/kenney_space-shooter-redux/PNG/Meteors/meteorGrey_med1.png');
     this.load.image('meteorGrey3', '/kenney_space-shooter-redux/PNG/Meteors/meteorGrey_small1.png');
 
-    // Load power-ups
-    this.load.image('powerupShield', '/kenney_space-shooter-redux/PNG/Power-ups/powerupBlue_shield.png');
-    this.load.image('powerupBolt', '/kenney_space-shooter-redux/PNG/Power-ups/bolt_gold.png');
-    this.load.image('powerupStar', '/kenney_space-shooter-redux/PNG/Power-ups/star_gold.png');
-    this.load.image('powerupHealth', '/kenney_space-shooter-redux/PNG/Power-ups/pill_green.png');
-
-    // Load UFOs (special enemies)
+    // Load UFOs (as player ships)
     this.load.image('ufoRed', '/kenney_space-shooter-redux/PNG/ufoRed.png');
     this.load.image('ufoGreen', '/kenney_space-shooter-redux/PNG/ufoGreen.png');
     this.load.image('ufoBlue', '/kenney_space-shooter-redux/PNG/ufoBlue.png');
@@ -76,8 +70,9 @@ export class BootScene extends Phaser.Scene {
     // Load background
     this.load.image('background', '/assets/backgrounds/darkPurple.png');
 
-    // Load background music
+    // Load audio
     this.load.audio('bgMusic', '/assets/audio/background-music.wav');
+    this.load.audio('gameOverSound', '/assets/audio/game-over.wav');
 
     // Loading progress
     const width = this.cameras.main.width;

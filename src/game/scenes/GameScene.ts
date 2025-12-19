@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { SoundGenerator } from '../utils/SoundGenerator';
+import { HandGestureController, GestureState } from '../utils/HandGestureController';
 
 export class GameScene extends Phaser.Scene {
   private player!: Phaser.Physics.Arcade.Sprite;
@@ -7,6 +8,12 @@ export class GameScene extends Phaser.Scene {
   private bullets!: Phaser.Physics.Arcade.Group;
   private enemies!: Phaser.Physics.Arcade.Group;
   private enemyBullets!: Phaser.Physics.Arcade.Group;
+
+  // Gesture controls
+  private gestureController: HandGestureController | null = null;
+  private gesturesEnabled = false;
+  private lastGestureShield = false;
+  private lastFingerCount = 0;
   private score = 0;
   private lives = 3;
   private resources = 0;
@@ -77,6 +84,17 @@ export class GameScene extends Phaser.Scene {
   private bossMovementTimer = 0;
   private bossDirection = 1;
 
+  // AI Co-Pilot Assistant
+  private aiAssistant!: Phaser.GameObjects.Container;
+  private aiAssistantText!: Phaser.GameObjects.Text;
+  private aiAssistantIcon!: Phaser.GameObjects.Graphics;
+  private aiTipTimer = 0;
+  private lastAITip = '';
+  private playerMovementHistory: { x: number; y: number; time: number }[] = [];
+
+  // Smart Enemy AI
+  private enemyAIEnabled = true;
+
   constructor() {
     super({ key: 'GameScene' });
   }
@@ -85,6 +103,10 @@ export class GameScene extends Phaser.Scene {
     // Get selected ship and laser from registry
     this.selectedShip = this.registry.get('selectedShip') || 'player';
     this.selectedLaser = this.registry.get('selectedLaser') || 'laserBlue01';
+
+    // Get gesture controller from registry
+    this.gestureController = this.registry.get('gestureController') || null;
+    this.gesturesEnabled = this.registry.get('gesturesEnabled') || false;
 
     // Create starfield background
     this.createStarfield();
@@ -472,6 +494,9 @@ export class GameScene extends Phaser.Scene {
 
     // Create pause menu (initially hidden)
     this.createPauseMenu();
+
+    // Create AI Co-Pilot Assistant
+    this.createAIAssistant();
   }
 
   createPowerUpPanel() {
@@ -772,7 +797,7 @@ export class GameScene extends Phaser.Scene {
     this.updateHealthBar();
   }
 
-  update(time: number) {
+  update(time: number, delta: number) {
     // Handle pause
     if (Phaser.Input.Keyboard.JustDown(this.escKey)) {
       this.togglePause();
@@ -781,6 +806,9 @@ export class GameScene extends Phaser.Scene {
     if (this.gameOver || this.introAnimationPlaying || this.isPaused) {
       return;
     }
+
+    // Update AI Assistant
+    this.updateAIAssistant(time, delta);
 
     // Update combo timer
     if (this.comboTimer > 0) {
@@ -830,17 +858,37 @@ export class GameScene extends Phaser.Scene {
     // Update power-up UI
     this.updatePowerUpUI();
 
+    // Update gesture state from registry (can be toggled during gameplay)
+    this.gesturesEnabled = this.registry.get('gesturesEnabled') || false;
+
+    // Get gesture state if gestures are enabled
+    let gestureState: GestureState | null = null;
+    if (this.gesturesEnabled && this.gestureController) {
+      gestureState = this.gestureController.getGestureState();
+    }
+
     // Player movement (with speed boost)
     const moveSpeed = this.speedBoostActive ? 300 : 200;
 
+    // Horizontal movement - keyboard or gesture
     if (this.cursors.left.isDown) {
       this.player.setVelocityX(-moveSpeed);
     } else if (this.cursors.right.isDown) {
       this.player.setVelocityX(moveSpeed);
+    } else if (gestureState && gestureState.isHandDetected) {
+      // Gesture control (inverted to match mirror view)
+      if (gestureState.moveDirection === 'left') {
+        this.player.setVelocityX(moveSpeed); // Hand left = ship right (mirror)
+      } else if (gestureState.moveDirection === 'right') {
+        this.player.setVelocityX(-moveSpeed); // Hand right = ship left (mirror)
+      } else {
+        this.player.setVelocityX(0);
+      }
     } else {
       this.player.setVelocityX(0);
     }
 
+    // Vertical movement - keyboard only
     if (this.cursors.up.isDown) {
       this.player.setVelocityY(-moveSpeed);
     } else if (this.cursors.down.isDown) {
@@ -849,10 +897,36 @@ export class GameScene extends Phaser.Scene {
       this.player.setVelocityY(0);
     }
 
-    // Shooting
-    if (this.cursors.space.isDown && time > this.lastFired) {
+    // Shooting - keyboard or gesture
+    const shouldShoot = this.cursors.space.isDown ||
+      (gestureState && gestureState.isHandDetected && gestureState.isPalmOpen);
+
+    if (shouldShoot && time > this.lastFired) {
       this.fireBullet();
       this.lastFired = time + this.fireRate;
+    }
+
+    // Gesture-based power-up activation using finger counting
+    if (gestureState && gestureState.isHandDetected) {
+      const fingerCount = gestureState.fingersExtended;
+
+      // Activate power-ups when finger count changes (edge trigger)
+      if (fingerCount !== this.lastFingerCount && fingerCount >= 1 && fingerCount <= 3) {
+        switch (fingerCount) {
+          case 1:
+            this.activateRapidFire();
+            break;
+          case 2:
+            this.activateShield();
+            break;
+          case 3:
+            this.activateSpeedBoost();
+            break;
+        }
+      }
+      this.lastFingerCount = fingerCount;
+    } else {
+      this.lastFingerCount = 0;
     }
 
     // Move enemies
@@ -926,13 +1000,64 @@ export class GameScene extends Phaser.Scene {
       if (bullet) {
         bullet.setActive(true);
         bullet.setVisible(true);
-        bullet.setVelocityY(180);
         bullet.setScale(0.8);
+
+        // AI: Predict player movement and aim there
+        if (this.enemyAIEnabled && this.currentLevel >= 2) {
+          const predictedPosition = this.predictPlayerPosition();
+          const angle = Phaser.Math.Angle.Between(
+            enemy.x,
+            enemy.y,
+            predictedPosition.x,
+            predictedPosition.y
+          );
+
+          const speed = 200;
+          bullet.setVelocity(
+            Math.cos(angle) * speed,
+            Math.sin(angle) * speed
+          );
+        } else {
+          // Normal straight shot
+          bullet.setVelocityY(180);
+        }
 
         // Play enemy shoot sound
         this.soundGenerator.playEnemyShootSound();
       }
     }
+  }
+
+  predictPlayerPosition(): { x: number; y: number } {
+    // Analyze player movement history to predict future position
+    if (this.playerMovementHistory.length < 10) {
+      return { x: this.player.x, y: this.player.y };
+    }
+
+    // Get last 10 positions
+    const recentHistory = this.playerMovementHistory.slice(-10);
+
+    // Calculate average velocity
+    let avgVelocityX = 0;
+    let avgVelocityY = 0;
+
+    for (let i = 1; i < recentHistory.length; i++) {
+      const deltaTime = recentHistory[i].time - recentHistory[i - 1].time;
+      if (deltaTime > 0) {
+        avgVelocityX += (recentHistory[i].x - recentHistory[i - 1].x) / deltaTime;
+        avgVelocityY += (recentHistory[i].y - recentHistory[i - 1].y) / deltaTime;
+      }
+    }
+
+    avgVelocityX /= (recentHistory.length - 1);
+    avgVelocityY /= (recentHistory.length - 1);
+
+    // Predict position 300ms ahead
+    const predictionTime = 300;
+    const predictedX = this.player.x + (avgVelocityX * predictionTime);
+    const predictedY = this.player.y + (avgVelocityY * predictionTime);
+
+    return { x: predictedX, y: predictedY };
   }
 
   moveEnemies() {
@@ -1236,11 +1361,6 @@ export class GameScene extends Phaser.Scene {
       const a1 = angle + (i * Math.PI / 3);
       const a2 = a1 + Math.PI / 6;
 
-      const x1 = this.player.x + Math.cos(a1) * radius;
-      const y1 = this.player.y + Math.sin(a1) * radius;
-      const x2 = this.player.x + Math.cos(a2) * radius;
-      const y2 = this.player.y + Math.sin(a2) * radius;
-
       this.shieldGraphics.beginPath();
       this.shieldGraphics.arc(this.player.x, this.player.y, radius, a1, a2);
       this.shieldGraphics.strokePath();
@@ -1487,63 +1607,184 @@ export class GameScene extends Phaser.Scene {
   bossAttack() {
     if (!this.boss || !this.boss.active) return;
 
-    // Phase 1: Single shot aimed at player
-    if (this.bossPhase === 1) {
-      const bullet = this.enemyBullets.get(this.boss.x, this.boss.y + 60);
+    // AI-Generated attack patterns based on phase and player behavior
+    const attackPatterns = this.generateBossAttackPattern();
+
+    attackPatterns.forEach((pattern) => {
+      const bullet = this.enemyBullets.get(
+        this.boss.x + pattern.offsetX,
+        this.boss.y + 60
+      );
+
       if (bullet) {
         bullet.setActive(true);
         bullet.setVisible(true);
-        bullet.setScale(1.2);
+        bullet.setScale(pattern.scale);
 
-        // Aim towards player
-        const angle = Phaser.Math.Angle.Between(this.boss.x, this.boss.y, this.player.x, this.player.y);
-        const speed = 200;
-        bullet.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
-
-        this.soundGenerator.playEnemyShootSound();
+        if (pattern.aimAtPlayer) {
+          // AI prediction: Aim at predicted player position
+          const predictedPos = this.predictPlayerPosition();
+          const angle = Phaser.Math.Angle.Between(
+            this.boss.x,
+            this.boss.y,
+            predictedPos.x,
+            predictedPos.y
+          );
+          bullet.setVelocity(
+            Math.cos(angle) * pattern.speed,
+            Math.sin(angle) * pattern.speed
+          );
+        } else {
+          bullet.setVelocity(pattern.velocityX, pattern.velocityY);
+        }
       }
-    }
-    // Phase 2: Triple shot spread
-    else if (this.bossPhase === 2) {
+    });
+
+    this.soundGenerator.playEnemyShootSound();
+  }
+
+  generateBossAttackPattern(): Array<{
+    offsetX: number;
+    offsetY: number;
+    velocityX: number;
+    velocityY: number;
+    speed: number;
+    scale: number;
+    aimAtPlayer: boolean;
+  }> {
+    const patterns: any[] = [];
+
+    // AI adapts pattern based on boss phase and player position
+    if (this.bossPhase === 1) {
+      // Phase 1: Predictive aimed shots
+      patterns.push({
+        offsetX: 0,
+        offsetY: 0,
+        velocityX: 0,
+        velocityY: 200,
+        speed: 220,
+        scale: 1.2,
+        aimAtPlayer: true
+      });
+
+      // Add side shots if player moves too much
+      if (this.playerMovementHistory.length > 20) {
+        const avgMovement = this.calculateAverageMovement();
+        if (Math.abs(avgMovement.x) > 2) {
+          patterns.push(
+            {
+              offsetX: -40,
+              offsetY: 0,
+              velocityX: -60,
+              velocityY: 180,
+              speed: 200,
+              scale: 1.0,
+              aimAtPlayer: false
+            },
+            {
+              offsetX: 40,
+              offsetY: 0,
+              velocityX: 60,
+              velocityY: 180,
+              speed: 200,
+              scale: 1.0,
+              aimAtPlayer: false
+            }
+          );
+        }
+      }
+    } else if (this.bossPhase === 2) {
+      // Phase 2: Spread + Predictive
       for (let i = -1; i <= 1; i++) {
-        const bullet = this.enemyBullets.get(this.boss.x + i * 40, this.boss.y + 60);
-        if (bullet) {
-          bullet.setActive(true);
-          bullet.setVisible(true);
-          bullet.setScale(1.2);
-          bullet.setVelocity(i * 80, 200);
-
-          this.soundGenerator.playEnemyShootSound();
-        }
+        patterns.push({
+          offsetX: i * 40,
+          offsetY: 0,
+          velocityX: i * 80,
+          velocityY: 200,
+          speed: 210,
+          scale: 1.2,
+          aimAtPlayer: false
+        });
       }
-    }
-    // Phase 3: Rapid fire spread + aimed shots
-    else {
-      // Spread shots
+
+      // Add predicted shot
+      patterns.push({
+        offsetX: 0,
+        offsetY: 0,
+        velocityX: 0,
+        velocityY: 0,
+        speed: 240,
+        scale: 1.3,
+        aimAtPlayer: true
+      });
+    } else {
+      // Phase 3: Maximum chaos - AI generates complex pattern
+      // Wide spread
       for (let i = -2; i <= 2; i++) {
-        const bullet = this.enemyBullets.get(this.boss.x + i * 30, this.boss.y + 60);
-        if (bullet) {
-          bullet.setActive(true);
-          bullet.setVisible(true);
-          bullet.setScale(1.1);
-          bullet.setVelocity(i * 60, 220);
+        patterns.push({
+          offsetX: i * 30,
+          offsetY: 0,
+          velocityX: i * 60,
+          velocityY: 220,
+          speed: 220,
+          scale: 1.1,
+          aimAtPlayer: false
+        });
+      }
+
+      // Multiple predicted shots
+      patterns.push(
+        {
+          offsetX: 0,
+          offsetY: 0,
+          velocityX: 0,
+          velocityY: 0,
+          speed: 260,
+          scale: 1.5,
+          aimAtPlayer: true
+        },
+        {
+          offsetX: -20,
+          offsetY: 0,
+          velocityX: 0,
+          velocityY: 0,
+          speed: 240,
+          scale: 1.3,
+          aimAtPlayer: true
+        },
+        {
+          offsetX: 20,
+          offsetY: 0,
+          velocityX: 0,
+          velocityY: 0,
+          speed: 240,
+          scale: 1.3,
+          aimAtPlayer: true
         }
-      }
-
-      // Aimed shot
-      const aimedBullet = this.enemyBullets.get(this.boss.x, this.boss.y + 60);
-      if (aimedBullet) {
-        aimedBullet.setActive(true);
-        aimedBullet.setVisible(true);
-        aimedBullet.setScale(1.5);
-
-        const angle = Phaser.Math.Angle.Between(this.boss.x, this.boss.y, this.player.x, this.player.y);
-        const speed = 250;
-        aimedBullet.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
-      }
-
-      this.soundGenerator.playEnemyShootSound();
+      );
     }
+
+    return patterns;
+  }
+
+  calculateAverageMovement(): { x: number; y: number } {
+    if (this.playerMovementHistory.length < 2) {
+      return { x: 0, y: 0 };
+    }
+
+    const recent = this.playerMovementHistory.slice(-20);
+    let totalDeltaX = 0;
+    let totalDeltaY = 0;
+
+    for (let i = 1; i < recent.length; i++) {
+      totalDeltaX += recent[i].x - recent[i - 1].x;
+      totalDeltaY += recent[i].y - recent[i - 1].y;
+    }
+
+    return {
+      x: totalDeltaX / (recent.length - 1),
+      y: totalDeltaY / (recent.length - 1)
+    };
   }
 
   hitBoss(
@@ -1707,7 +1948,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     // Create victory screen background
-    const overlay = this.add.rectangle(700, 450, 1400, 900, 0x000000, 0.85);
+    this.add.rectangle(700, 450, 1400, 900, 0x000000, 0.85);
 
     const menuBg = this.add.graphics();
     menuBg.fillStyle(0x001a00, 0.95);
@@ -1833,8 +2074,11 @@ export class GameScene extends Phaser.Scene {
       this.music.stop();
     }
 
+    // Play game over sound
+    this.sound.play('gameOverSound', { volume: 0.5 });
+
     // Create game over screen background
-    const overlay = this.add.rectangle(700, 450, 1400, 900, 0x000000, 0.85);
+    this.add.rectangle(700, 450, 1400, 900, 0x000000, 0.85);
 
     const menuBg = this.add.graphics();
     menuBg.fillStyle(0x1a0000, 0.95);
@@ -1942,5 +2186,138 @@ export class GameScene extends Phaser.Scene {
       repeat: -1,
       ease: 'Sine.easeInOut'
     });
+  }
+
+  createAIAssistant() {
+    this.aiAssistant = this.add.container(1150, 100);
+
+    // AI Icon (robot head)
+    this.aiAssistantIcon = this.add.graphics();
+    this.aiAssistantIcon.fillStyle(0x00ffff, 1);
+    this.aiAssistantIcon.fillCircle(0, 0, 20);
+    this.aiAssistantIcon.fillStyle(0x001a33, 1);
+    this.aiAssistantIcon.fillCircle(-5, -5, 4); // Left eye
+    this.aiAssistantIcon.fillCircle(5, -5, 4); // Right eye
+    this.aiAssistantIcon.lineStyle(2, 0x001a33, 1);
+    this.aiAssistantIcon.strokeRect(-8, 5, 16, 4); // Mouth
+
+    // Pulsing animation for AI icon
+    this.tweens.add({
+      targets: this.aiAssistantIcon,
+      scaleX: 1.1,
+      scaleY: 1.1,
+      duration: 1000,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut'
+    });
+
+    // Background panel
+    const panel = this.add.graphics();
+    panel.fillStyle(0x001a33, 0.9);
+    panel.fillRoundedRect(-120, 30, 240, 80, 8);
+    panel.lineStyle(2, 0x00ffff, 0.8);
+    panel.strokeRoundedRect(-120, 30, 240, 80, 8);
+
+    // AI Label
+    const label = this.add.text(0, 45, 'AI CO-PILOT', {
+      fontSize: '12px',
+      color: '#00ffff',
+      fontFamily: 'monospace',
+      fontStyle: 'bold'
+    });
+    label.setOrigin(0.5);
+
+    // AI Tip Text
+    this.aiAssistantText = this.add.text(0, 75, 'Analyzing...', {
+      fontSize: '11px',
+      color: '#ffffff',
+      fontFamily: 'monospace',
+      align: 'center'
+    });
+    this.aiAssistantText.setOrigin(0.5);
+    this.aiAssistantText.setWordWrapWidth(220);
+
+    this.aiAssistant.add([panel, this.aiAssistantIcon, label, this.aiAssistantText]);
+    this.aiAssistant.setDepth(100);
+  }
+
+  updateAIAssistant(time: number, delta: number) {
+    this.aiTipTimer += delta;
+
+    // Track player movement for AI analysis
+    this.playerMovementHistory.push({
+      x: this.player.x,
+      y: this.player.y,
+      time: time
+    });
+
+    // Keep only last 2 seconds of history
+    if (this.playerMovementHistory.length > 120) {
+      this.playerMovementHistory.shift();
+    }
+
+    // Give tips every 5 seconds
+    if (this.aiTipTimer > 5000) {
+      this.aiTipTimer = 0;
+      this.giveAITip();
+    }
+  }
+
+  giveAITip() {
+    const tips: string[] = [];
+
+    // Analyze situation and give contextual tips
+    const enemyCount = this.enemies.countActive();
+    const healthPercentage = this.lives / 3;
+
+    if (healthPercentage < 0.34 && this.resources >= this.shieldCost) {
+      tips.push('⚠️ Low health!\nActivate Shield [2]');
+    }
+
+    if (enemyCount > 15 && this.resources >= this.rapidFireCost) {
+      tips.push('💡 Many enemies!\nUse Rapid Fire [1]');
+    }
+
+    if (this.player.y < 300) {
+      tips.push('⚠️ Too close to\nenemies! Move back');
+    }
+
+    if (this.resources > 50) {
+      tips.push('💎 Use power-ups!\nYou have resources');
+    }
+
+    if (this.combo > 5) {
+      tips.push('🔥 Great combo!\nKeep it up!');
+    }
+
+    if (this.enemies.countActive() < 5 && !this.isBossLevel) {
+      tips.push('✓ Almost clear!\nStay focused');
+    }
+
+    if (this.isBossLevel && this.bossHealth < this.bossMaxHealth * 0.3) {
+      tips.push('🎯 Boss low health!\nFinal push!');
+    }
+
+    if (tips.length === 0) {
+      tips.push('👍 Good positioning\nKeep moving!');
+    }
+
+    // Select random tip from available ones
+    const selectedTip = tips[Math.floor(Math.random() * tips.length)];
+
+    if (selectedTip !== this.lastAITip) {
+      this.lastAITip = selectedTip;
+      this.aiAssistantText.setText(selectedTip);
+
+      // Flash animation
+      this.tweens.add({
+        targets: this.aiAssistantText,
+        alpha: 0.3,
+        duration: 200,
+        yoyo: true,
+        repeat: 1
+      });
+    }
   }
 }

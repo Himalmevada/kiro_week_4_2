@@ -27,3 +27,6 @@ dist-ssr
 .amplify
 amplify_outputs*
 amplifyconfiguration*
+
+# Kenney asset source packs (assets already in public/assets/)
+kenney_*

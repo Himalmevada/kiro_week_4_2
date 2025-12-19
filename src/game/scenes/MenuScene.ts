@@ -17,7 +17,11 @@ export class MenuScene extends Phaser.Scene {
     { key: 'playerShip3_blue', name: 'Interceptor', color: 'Blue' },
     { key: 'playerShip3_green', name: 'Interceptor', color: 'Green' },
     { key: 'playerShip3_orange', name: 'Interceptor', color: 'Orange' },
-    { key: 'playerShip3_red', name: 'Interceptor', color: 'Red' }
+    { key: 'playerShip3_red', name: 'Interceptor', color: 'Red' },
+    { key: 'ufoBlue', name: 'UFO', color: 'Blue' },
+    { key: 'ufoGreen', name: 'UFO', color: 'Green' },
+    { key: 'ufoYellow', name: 'UFO', color: 'Yellow' },
+    { key: 'ufoRed', name: 'UFO', color: 'Red' }
   ];
   private laserOptions = [
     { key: 'laserBlue01', name: 'Blue Beam', color: 0x00ffff },
@@ -99,14 +103,14 @@ export class MenuScene extends Phaser.Scene {
 
     let yOffset = 360;
     controls.forEach((control) => {
-      const keyText = this.add.text(450, yOffset, control.key, {
+      this.add.text(450, yOffset, control.key, {
         fontSize: '14px',
         color: '#00ffff',
         fontFamily: 'monospace',
         fontStyle: 'bold'
       });
 
-      const actionText = this.add.text(610, yOffset, `- ${control.action}`, {
+      this.add.text(610, yOffset, `- ${control.action}`, {
         fontSize: '14px',
         color: '#ffffff',
         fontFamily: 'monospace'
