@@ -7,18 +7,18 @@ export class BootScene extends Phaser.Scene {
 
   preload() {
     // Load player ships - multiple variants for selection
-    this.load.image('playerShip1_blue', '/kenney_space-shooter-redux/PNG/playerShip1_blue.png');
-    this.load.image('playerShip1_green', '/kenney_space-shooter-redux/PNG/playerShip1_green.png');
-    this.load.image('playerShip1_orange', '/kenney_space-shooter-redux/PNG/playerShip1_orange.png');
-    this.load.image('playerShip1_red', '/kenney_space-shooter-redux/PNG/playerShip1_red.png');
-    this.load.image('playerShip2_blue', '/kenney_space-shooter-redux/PNG/playerShip2_blue.png');
-    this.load.image('playerShip2_green', '/kenney_space-shooter-redux/PNG/playerShip2_green.png');
-    this.load.image('playerShip2_orange', '/kenney_space-shooter-redux/PNG/playerShip2_orange.png');
-    this.load.image('playerShip2_red', '/kenney_space-shooter-redux/PNG/playerShip2_red.png');
-    this.load.image('playerShip3_blue', '/kenney_space-shooter-redux/PNG/playerShip3_blue.png');
-    this.load.image('playerShip3_green', '/kenney_space-shooter-redux/PNG/playerShip3_green.png');
-    this.load.image('playerShip3_orange', '/kenney_space-shooter-redux/PNG/playerShip3_orange.png');
-    this.load.image('playerShip3_red', '/kenney_space-shooter-redux/PNG/playerShip3_red.png');
+    this.load.image('playerShip1_blue', '/assets/ships/playerShip1_blue.png');
+    this.load.image('playerShip1_green', '/assets/ships/playerShip1_green.png');
+    this.load.image('playerShip1_orange', '/assets/ships/playerShip1_orange.png');
+    this.load.image('playerShip1_red', '/assets/ships/playerShip1_red.png');
+    this.load.image('playerShip2_blue', '/assets/ships/playerShip2_blue.png');
+    this.load.image('playerShip2_green', '/assets/ships/playerShip2_green.png');
+    this.load.image('playerShip2_orange', '/assets/ships/playerShip2_orange.png');
+    this.load.image('playerShip2_red', '/assets/ships/playerShip2_red.png');
+    this.load.image('playerShip3_blue', '/assets/ships/playerShip3_blue.png');
+    this.load.image('playerShip3_green', '/assets/ships/playerShip3_green.png');
+    this.load.image('playerShip3_orange', '/assets/ships/playerShip3_orange.png');
+    this.load.image('playerShip3_red', '/assets/ships/playerShip3_red.png');
 
     // Keep default 'player' key for backward compatibility
     this.load.image('player', '/assets/ships/playerShip1_blue.png');
@@ -54,18 +54,18 @@ export class BootScene extends Phaser.Scene {
     this.load.image('planet4', '/assets/planets/planet03.png');
 
     // Load meteors/asteroids
-    this.load.image('meteorBrown1', '/kenney_space-shooter-redux/PNG/Meteors/meteorBrown_big1.png');
-    this.load.image('meteorBrown2', '/kenney_space-shooter-redux/PNG/Meteors/meteorBrown_med1.png');
-    this.load.image('meteorBrown3', '/kenney_space-shooter-redux/PNG/Meteors/meteorBrown_small1.png');
-    this.load.image('meteorGrey1', '/kenney_space-shooter-redux/PNG/Meteors/meteorGrey_big1.png');
-    this.load.image('meteorGrey2', '/kenney_space-shooter-redux/PNG/Meteors/meteorGrey_med1.png');
-    this.load.image('meteorGrey3', '/kenney_space-shooter-redux/PNG/Meteors/meteorGrey_small1.png');
+    this.load.image('meteorBrown1', '/assets/meteors/meteorBrown_big1.png');
+    this.load.image('meteorBrown2', '/assets/meteors/meteorBrown_med1.png');
+    this.load.image('meteorBrown3', '/assets/meteors/meteorBrown_small1.png');
+    this.load.image('meteorGrey1', '/assets/meteors/meteorGrey_big1.png');
+    this.load.image('meteorGrey2', '/assets/meteors/meteorGrey_med1.png');
+    this.load.image('meteorGrey3', '/assets/meteors/meteorGrey_small1.png');
 
     // Load UFOs (as player ships)
-    this.load.image('ufoRed', '/kenney_space-shooter-redux/PNG/ufoRed.png');
-    this.load.image('ufoGreen', '/kenney_space-shooter-redux/PNG/ufoGreen.png');
-    this.load.image('ufoBlue', '/kenney_space-shooter-redux/PNG/ufoBlue.png');
-    this.load.image('ufoYellow', '/kenney_space-shooter-redux/PNG/ufoYellow.png');
+    this.load.image('ufoRed', '/assets/ships/ufoRed.png');
+    this.load.image('ufoGreen', '/assets/ships/ufoGreen.png');
+    this.load.image('ufoBlue', '/assets/ships/ufoBlue.png');
+    this.load.image('ufoYellow', '/assets/ships/ufoYellow.png');
 
     // Load background
     this.load.image('background', '/assets/backgrounds/darkPurple.png');
