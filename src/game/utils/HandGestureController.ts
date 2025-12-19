@@ -42,11 +42,32 @@ export class HandGestureController {
     }
 
     try {
+      // Check if browser supports required APIs
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error('Camera access is not supported in this browser. Please use a modern browser like Chrome, Firefox, or Edge.');
+      }
+
+      // Check camera permissions
+      if (navigator.permissions) {
+        try {
+          const permissionStatus = await navigator.permissions.query({ name: 'camera' as PermissionName });
+          if (permissionStatus.state === 'denied') {
+            throw new Error('Camera permission denied. Please allow camera access in your browser settings and reload the page.');
+          }
+        } catch (permError) {
+          // Permission API might not be fully supported, continue anyway
+          console.warn('Could not check camera permissions:', permError);
+        }
+      }
+
       // Initialize TensorFlow backend
+      console.log('Initializing TensorFlow...');
       await tf.ready();
       await tf.setBackend('webgl');
+      console.log('TensorFlow backend ready');
 
       // Create hand detector
+      console.log('Loading hand detection model...');
       const model = handPoseDetection.SupportedModels.MediaPipeHands;
       const detectorConfig: handPoseDetection.MediaPipeHandsMediaPipeModelConfig = {
         runtime: 'mediapipe',
@@ -56,8 +77,10 @@ export class HandGestureController {
       };
 
       this.detector = await handPoseDetection.createDetector(model, detectorConfig);
+      console.log('Hand detection model loaded');
 
       // Setup video stream
+      console.log('Requesting camera access...');
       this.video = document.createElement('video');
       this.video.width = 640;
       this.video.height = 480;
@@ -73,17 +96,36 @@ export class HandGestureController {
       });
 
       this.video.srcObject = stream;
-      await new Promise((resolve) => {
+      await new Promise((resolve, reject) => {
         if (this.video) {
           this.video.onloadedmetadata = resolve;
+          this.video.onerror = reject;
+          // Timeout after 10 seconds
+          setTimeout(() => reject(new Error('Camera stream timeout')), 10000);
         }
       });
 
       this.isInitialized = true;
       console.log('HandGestureController initialized successfully');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to initialize HandGestureController:', error);
-      throw error;
+
+      // Provide user-friendly error messages
+      if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
+        throw new Error('Camera permission denied. Please allow camera access and try again.');
+      } else if (error.name === 'NotFoundError' || error.name === 'DevicesNotFoundError') {
+        throw new Error('No camera found. Please connect a camera and try again.');
+      } else if (error.name === 'NotReadableError' || error.name === 'TrackStartError') {
+        throw new Error('Camera is already in use by another application. Please close other apps using the camera.');
+      } else if (error.name === 'OverconstrainedError') {
+        throw new Error('Camera does not meet the required specifications.');
+      } else if (error.name === 'SecurityError') {
+        throw new Error('Camera access blocked by security settings. Please ensure the site is accessed via HTTPS.');
+      } else if (error.message) {
+        throw error;
+      } else {
+        throw new Error('Failed to initialize camera. Please check your browser settings and try again.');
+      }
     }
   }
 

@@ -49,9 +49,54 @@ export default function Game() {
         if (gameRef.current) {
           gameRef.current.registry.set('gesturesEnabled', true);
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('Failed to enable gesture control:', error);
-        alert('Failed to access webcam. Please grant camera permissions and try again.');
+
+        // Display user-friendly error message based on error type
+        const errorMessage = error?.message || 'Failed to access webcam';
+        let fullMessage = '🎥 Camera Access Error\n\n';
+
+        if (errorMessage.includes('permission')) {
+          fullMessage += 'Camera permission denied.\n\n' +
+            'Please:\n' +
+            '1. Look for the camera icon in your browser\'s address bar\n' +
+            '2. Click it and select "Allow"\n' +
+            '3. Refresh the page and try again\n\n' +
+            'Note: On deployed sites, HTTPS is required for camera access.';
+        } else if (errorMessage.includes('No camera')) {
+          fullMessage += 'No camera found on your device.\n\n' +
+            'Please:\n' +
+            '1. Connect a webcam to your device\n' +
+            '2. Check that no other app is using the camera\n' +
+            '3. Try again';
+        } else if (errorMessage.includes('already in use')) {
+          fullMessage += 'Your camera is already in use by another application.\n\n' +
+            'Please:\n' +
+            '1. Close other apps using the camera (Zoom, Google Meet, etc.)\n' +
+            '2. Try again';
+        } else if (errorMessage.includes('HTTPS') || errorMessage.includes('SecurityError')) {
+          fullMessage += 'Camera access requires HTTPS.\n\n' +
+            'On deployed sites:\n' +
+            '1. Ensure you\'re using HTTPS (not HTTP)\n' +
+            '2. Check your browser supports camera access\n' +
+            '3. Grant camera permissions in browser settings';
+        } else if (errorMessage.includes('browser')) {
+          fullMessage += 'Your browser doesn\'t support camera access.\n\n' +
+            'Please use:\n' +
+            '• Chrome 90+\n' +
+            '• Firefox 88+\n' +
+            '• Edge 90+\n' +
+            '• Safari 14+';
+        } else {
+          fullMessage += errorMessage + '\n\n' +
+            'General troubleshooting:\n' +
+            '• Ensure HTTPS is used on deployed sites\n' +
+            '• Grant camera permissions in browser settings\n' +
+            '• Check no other app is using the camera\n' +
+            '• Try refreshing the page';
+        }
+
+        alert(fullMessage);
       } finally {
         setIsInitializing(false);
       }
@@ -96,7 +141,9 @@ export default function Game() {
           left: "20px",
           zIndex: 1001,
           padding: "12px 24px",
-          background: isGestureEnabled
+          background: isInitializing
+            ? "linear-gradient(135deg, #ff8800, #cc6600)"
+            : isGestureEnabled
             ? "linear-gradient(135deg, #00ff88, #00cc66)"
             : "linear-gradient(135deg, #0088ff, #0066cc)",
           color: "#fff",
@@ -107,11 +154,12 @@ export default function Game() {
           fontSize: "14px",
           boxShadow: "0 4px 15px rgba(0, 0, 0, 0.3)",
           transition: "all 0.3s ease",
-          fontFamily: "monospace"
+          fontFamily: "monospace",
+          opacity: isInitializing ? 0.8 : 1
         }}
       >
         {isInitializing
-          ? "Initializing AI..."
+          ? "⏳ Initializing AI..."
           : isGestureEnabled
             ? "🤖 AI Gestures: ON"
             : "🤖 Enable AI Gestures"}
