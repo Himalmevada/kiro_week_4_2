@@ -66,13 +66,12 @@ export class HandGestureController {
       await tf.setBackend('webgl');
       console.log('TensorFlow backend ready');
 
-      // Create hand detector
+      // Create hand detector using TFLite runtime (more reliable than MediaPipe)
       console.log('Loading hand detection model...');
       const model = handPoseDetection.SupportedModels.MediaPipeHands;
-      const detectorConfig: handPoseDetection.MediaPipeHandsMediaPipeModelConfig = {
-        runtime: 'mediapipe',
-        solutionPath: 'https://cdn.jsdelivr.net/npm/@mediapipe/hands',
-        modelType: 'full',
+      const detectorConfig: handPoseDetection.MediaPipeHandsTfjsModelConfig = {
+        runtime: 'tfjs',
+        modelType: 'lite',
         maxHands: 1,
       };
 
