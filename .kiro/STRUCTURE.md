@@ -2,7 +2,7 @@
 
 ## What is the .kiro Folder?
 
-The `.kiro` folder is a project management and documentation structure that helps organize specifications, design documents, implementation plans, and development guidelines for the Space Shooter Game project.
+The `.kiro` folder is a project management and documentation structure that helps organize specifications, design documents, implementation plans, and development guidelines for the Space Invaders Game project.
 
 ## Complete File Structure
 
@@ -13,7 +13,7 @@ The `.kiro` folder is a project management and documentation structure that help
 ├── STRUCTURE.md                                 # This file - folder overview
 │
 ├── specs/                                       # Project Specifications
-│   └── space-shooter-game/
+│   └── space-invaders-game/
 │       ├── requirements.md                      # Feature requirements (10 requirements)
 │       ├── design.md                            # System design & architecture
 │       └── tasks.md                             # Implementation plan (39 core + 25 optional tasks)
@@ -29,7 +29,7 @@ The `.kiro` folder is a project management and documentation structure that help
 
 ## File Descriptions
 
-### Specifications (specs/space-shooter-game/)
+### Specifications (specs/space-invaders-game/)
 
 #### requirements.md (10 Requirements)
 **Purpose:** Define what the game should do
@@ -227,11 +227,11 @@ The `.kiro` folder is a project management and documentation structure that help
 ### For New Developers
 
 1. Start with `.kiro/README.md` - Get oriented
-2. Read `specs/space-shooter-game/requirements.md` - Understand features
-3. Read `specs/space-shooter-game/design.md` - Understand architecture
+2. Read `specs/space-invaders-game/requirements.md` - Understand features
+3. Read `specs/space-invaders-game/design.md` - Understand architecture
 4. Review `steering/project-standards.md` - Learn code style
 5. Review `steering/architecture-guide.md` - Understand system design
-6. Start with Phase 1 tasks in `specs/space-shooter-game/tasks.md`
+6. Start with Phase 1 tasks in `specs/space-invaders-game/tasks.md`
 
 ### For Implementing Features
 
@@ -247,7 +247,7 @@ The `.kiro` folder is a project management and documentation structure that help
 1. Check `steering/gesture-recognition-guide.md` for gesture issues
 2. Check `steering/architecture-guide.md` for architecture issues
 3. Check `steering/project-standards.md` for code style issues
-4. Check `specs/space-shooter-game/design.md` for design issues
+4. Check `specs/space-invaders-game/design.md` for design issues
 
 ### For Adding New Features
 

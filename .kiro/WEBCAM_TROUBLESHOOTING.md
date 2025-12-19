@@ -2,7 +2,7 @@
 
 ## Error: "Failed to access webcam. Please grant camera permissions and try again."
 
-This guide helps you resolve camera access issues when using gesture recognition on the Space Shooter Game.
+This guide helps you resolve camera access issues when using gesture recognition on the Space Invaders Game.
 
 ## Quick Fixes
 

@@ -1,4 +1,4 @@
-# Space Shooter Game - Gesture Recognition Implementation Guide
+# Space Invaders Game - Gesture Recognition Implementation Guide
 
 ## Overview
 

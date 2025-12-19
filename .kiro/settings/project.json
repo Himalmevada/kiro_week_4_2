@@ -1,6 +1,6 @@
 {
-    "projectName": "Space Shooter Game",
-    "projectDescription": "A modern arcade-style space shooter with AI gesture recognition",
+    "projectName": "Space Invaders Game",
+    "projectDescription": "A modern arcade-style space invaders game with AI gesture recognition",
     "version": "1.0.0",
     "language": "TypeScript",
     "framework": "React + Phaser 3",
@@ -101,9 +101,9 @@
     },
     "documentation": {
         "readme": "README.md",
-        "requirements": ".kiro/specs/space-shooter-game/requirements.md",
-        "design": ".kiro/specs/space-shooter-game/design.md",
-        "tasks": ".kiro/specs/space-shooter-game/tasks.md",
+        "requirements": ".kiro/specs/space-invaders-game/requirements.md",
+        "design": ".kiro/specs/space-invaders-game/design.md",
+        "tasks": ".kiro/specs/space-invaders-game/tasks.md",
         "standards": ".kiro/steering/project-standards.md",
         "architecture": ".kiro/steering/architecture-guide.md",
         "gestures": ".kiro/steering/gesture-recognition-guide.md"

@@ -1,4 +1,4 @@
-# Space Shooter Game - Project Standards and Guidelines
+# Space Invaders Game - Project Standards and Guidelines
 
 ## Code Style and Conventions
 

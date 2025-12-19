@@ -1,8 +1,8 @@
-# Space Shooter Game - Requirements Document
+# Space Invaders Game - Requirements Document
 
 ## Introduction
 
-The Space Shooter Game is a modern take on classic arcade space shooter games like Space Invaders. Built with React, TypeScript, and Phaser.js, it combines traditional gameplay mechanics with cutting-edge AI gesture recognition technology. Players can control their spaceship using either keyboard controls or hand gestures detected via webcam, destroy enemy formations across 5 progressive levels, collect resources to activate power-ups, and compete for high scores. The game features customizable ships and lasers, procedurally generated audio, and a balanced difficulty curve that increases engagement throughout the gameplay experience.
+The Space Invaders Game is a modern take on classic arcade space invaders games. Built with React, TypeScript, and Phaser.js, it combines traditional gameplay mechanics with cutting-edge AI gesture recognition technology. Players can control their spaceship using either keyboard controls or hand gestures detected via webcam, destroy enemy formations across 5 progressive levels, collect resources to activate power-ups, and compete for high scores. The game features customizable ships and lasers, procedurally generated audio, and a balanced difficulty curve that increases engagement throughout the gameplay experience.
 
 ## Glossary
 

@@ -1,8 +1,8 @@
-# Space Shooter Game - Design Document
+# Space Invaders Game - Design Document
 
 ## Overview
 
-The Space Shooter Game is a modern arcade-style space shooter that combines classic gameplay with AI-powered gesture recognition. The architecture is built on React for UI management, Phaser 3 for game engine capabilities, and TensorFlow.js with MediaPipe for hand pose detection. The system is designed to be modular, maintainable, and extensible, with clear separation between game logic, rendering, input handling, and AI systems.
+The Space Invaders Game is a modern arcade-style space invaders game that combines classic gameplay with AI-powered gesture recognition. The architecture is built on React for UI management, Phaser 3 for game engine capabilities, and TensorFlow.js with MediaPipe for hand pose detection. The system is designed to be modular, maintainable, and extensible, with clear separation between game logic, rendering, input handling, and AI systems.
 
 ## Architecture
 

@@ -1,8 +1,8 @@
-# Space Shooter Game - Architecture Guide
+# Space Invaders Game - Architecture Guide
 
 ## System Architecture Overview
 
-The Space Shooter Game follows a layered architecture with clear separation of concerns:
+The Space Invaders Game follows a layered architecture with clear separation of concerns:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐

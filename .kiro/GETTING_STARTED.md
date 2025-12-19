@@ -1,10 +1,10 @@
-# Getting Started with Space Shooter Game Development
+# Getting Started with Space Invaders Game Development
 
-Welcome to the Space Shooter Game project! This guide will help you get started with development using the `.kiro` project structure.
+Welcome to the Space Invaders Game project! This guide will help you get started with development using the `.kiro` project structure.
 
 ## What You're Building
 
-A modern arcade-style space shooter game with:
+A modern arcade-style space invaders game with:
 - 5 progressive levels with increasing difficulty
 - AI-powered hand gesture recognition for hands-free gameplay
 - 16 customizable ships and 8 laser variants
@@ -15,7 +15,7 @@ A modern arcade-style space shooter game with:
 ## Project Structure Overview
 
 ```
-Space Shooter Game/
+Space Invaders Game/
 ├── .kiro/                          # Project management (YOU ARE HERE)
 │   ├── specs/                      # Specifications & design
 │   ├── steering/                   # Development guidelines
@@ -63,12 +63,12 @@ Navigate to `http://localhost:5173`
    - Document overview
    - Development workflow
 
-3. **[specs/space-shooter-game/requirements.md](specs/space-shooter-game/requirements.md)** (10 min)
+3. **[specs/space-invaders-game/requirements.md](specs/space-invaders-game/requirements.md)** (10 min)
    - 10 requirements
    - What the game should do
    - Acceptance criteria
 
-4. **[specs/space-shooter-game/design.md](specs/space-shooter-game/design.md)** (10 min)
+4. **[specs/space-invaders-game/design.md](specs/space-invaders-game/design.md)** (10 min)
    - System architecture
    - Components and interfaces
    - Correctness properties
@@ -78,17 +78,17 @@ Navigate to `http://localhost:5173`
 ### For Each Feature
 
 1. **Find the Requirement**
-   - Open `specs/space-shooter-game/requirements.md`
+   - Open `specs/space-invaders-game/requirements.md`
    - Find the requirement number
    - Read the user story and acceptance criteria
 
 2. **Understand the Design**
-   - Open `specs/space-shooter-game/design.md`
+   - Open `specs/space-invaders-game/design.md`
    - Find the related component
    - Review the data models and interfaces
 
 3. **Find the Tasks**
-   - Open `specs/space-shooter-game/tasks.md`
+   - Open `specs/space-invaders-game/tasks.md`
    - Find the related tasks
    - Understand task dependencies
 

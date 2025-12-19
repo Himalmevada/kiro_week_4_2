@@ -1,8 +1,8 @@
-# Space Shooter Game - Implementation Plan
+# Space Invaders Game - Implementation Plan
 
 ## Overview
 
-This implementation plan breaks down the Space Shooter Game into discrete, manageable coding tasks. Each task builds incrementally on previous tasks, ensuring that all code is integrated and functional. The plan follows implementation-first development, with testing tasks marked as optional to focus on core features first.
+This implementation plan breaks down the Space Invaders Game into discrete, manageable coding tasks. Each task builds incrementally on previous tasks, ensuring that all code is integrated and functional. The plan follows implementation-first development, with testing tasks marked as optional to focus on core features first.
 
 ---
 
@@ -504,7 +504,7 @@ This implementation plan breaks down the Space Shooter Game into discrete, manag
 
 ## Summary
 
-This implementation plan provides a structured approach to building the Space Shooter Game incrementally. Each phase builds on previous phases, ensuring that code is always integrated and functional. Optional testing tasks (marked with *) can be skipped for faster MVP development but should be completed for comprehensive testing coverage.
+This implementation plan provides a structured approach to building the Space Invaders Game incrementally. Each phase builds on previous phases, ensuring that code is always integrated and functional. Optional testing tasks (marked with *) can be skipped for faster MVP development but should be completed for comprehensive testing coverage.
 
 **Total Core Tasks:** 39
 **Total Optional Testing Tasks:** 25

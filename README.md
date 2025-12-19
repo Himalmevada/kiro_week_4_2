@@ -1,267 +1,313 @@
-# Space Shooter Game
+# Space Invaders Game - Kiro Project Structure
 
-A fully functional space shooter game built with React, TypeScript, and Phaser.js. Inspired by classic arcade games like Space Invaders with modern visuals and cutting-edge AI gesture recognition for hands-free gameplay.
+This directory contains all project specifications, design documents, implementation plans, and development guidelines for the Space Invaders Game.
 
-## 🎮 Features
-
-### Core Gameplay
-- **5 Progressive Levels** with increasing difficulty and unique visual themes
-- **Level-specific backgrounds** with unique planet configurations
-- **Cinematic intro animation** with enemies flying in from above
-- **Atmospheric background music** (Mountain Trails)
-- **Classic space shooter gameplay** with balanced difficulty
-- **Enemy formations** with AI movement patterns
-- **Smooth, responsive controls** with keyboard and gesture support
-- **Precise collision detection** (one bullet = one enemy)
-- **Score tracking** and resource management system
-- **Multiple lives system** with visual health indicators
-- **Beautiful space backgrounds** with planets and stars
-- **Spectacular explosion effects** with visual feedback
-- **Game over and restart** functionality
-- **Victory screen** when all 5 levels are completed
-
-### AI Gesture Recognition (🤖 NEW!)
-- **Hand Pose Detection** using TensorFlow.js and MediaPipe
-- **Real-time hand tracking** with visual overlay
-- **Gesture-based controls:**
-  - Move hand **LEFT/RIGHT** to steer the ship
-  - **OPEN PALM** to shoot lasers
-  - **CLOSE FIST** to stop shooting
-- **Finger counting** for power-up activation:
-  - **1 finger** = Rapid Fire power-up
-  - **2 fingers** = Shield power-up
-  - **3 fingers** = Speed Boost power-up
-- **Live gesture visualization** with hand position tracking
-- **Confidence scoring** for gesture detection
-- **Dead zone detection** to prevent accidental steering
-- **Webcam overlay** showing real-time hand tracking
-
-### Power-Up System
-- **Rapid Fire** (Cost: 15⚡) - Increases fire rate for 10 seconds
-- **Shield** (Cost: 20⚡) - Protects from damage for 8 seconds
-- **Speed Boost** (Cost: 10⚡) - Increases movement speed for 12 seconds
-- **Keyboard activation:** Press 1, 2, or 3 keys
-- **Gesture activation:** Show 1, 2, or 3 fingers
-
-### Customization
-- **16 Ship Variants** to choose from:
-  - Scout, Fighter, and Interceptor classes
-  - Blue, Green, Orange, and Red color options
-  - UFO variants for unique gameplay
-- **8 Laser Types** with different visual styles:
-  - Blue and Red laser variants
-  - Different beam patterns and effects
-- **Menu-based selection** with live preview
-
-### Audio System
-- **Procedurally generated sound effects** using Web Audio API
-- **Laser shots** (player and enemy variants)
-- **Explosions** with multi-layer synthesis
-- **Hit feedback** sounds
-- **Background music** with atmospheric ambience
-- **Volume balancing** for immersive gameplay
-
-## 🎯 Game Assets
-
-This game uses high-quality assets from Kenney:
-- Space Shooter Redux pack
-- Planets pack
-- Space Shooter Extension pack
-
-## 🕹️ Controls
-
-### Keyboard Controls
-- **Arrow Keys**: Move the spaceship (Up, Down, Left, Right)
-- **Spacebar**: Shoot lasers
-- **1/2/3 Keys**: Activate power-ups (Rapid Fire, Shield, Speed Boost)
-- **ESC**: Pause/Resume game
-- **↑↓ Arrows (Menu)**: Select ship
-- **←→ Arrows (Menu)**: Select laser type
-
-### Gesture Controls (AI-Powered)
-1. Click **"🤖 Enable AI Gestures"** button in top-left
-2. Grant camera permissions when prompted
-3. **Move hand LEFT/RIGHT** to steer
-4. **Open palm** to shoot
-5. **Show fingers** (1-3) to activate power-ups
-6. Watch the **webcam overlay** for real-time feedback
-
-## 🎮 Gameplay
-
-- Destroy enemy ships to earn points and resources (⚡)
-- Avoid enemy bullets and collisions
-- You have 3 lives - lose them all and it's game over!
-- Enemy ships move faster as you progress through levels
-- Score increases by 10 points for each enemy destroyed
-- Collect energy (⚡) to activate power-ups
-- Survive all 5 levels to achieve victory
-
-## 📦 Installation
-
-Install dependencies:
-```bash
-npm install
-```
-
-## 🚀 Running the Game
-
-Start the development server:
-```bash
-npm run dev
-```
-
-Open your browser and navigate to `http://localhost:5173/`
-
-### Browser Requirements
-- Modern browser with WebGL support (for TensorFlow.js)
-- Webcam access (for gesture recognition)
-- JavaScript enabled
-
-## 🏗️ Building for Production
-
-```bash
-npm run build
-```
-
-## 📁 Project Structure
+## Directory Structure
 
 ```
-src/
-├── game/
-│   ├── config.ts                    # Phaser game configuration
-│   ├── utils/
-│   │   ├── HandGestureController.ts # AI hand pose detection & gesture recognition
-│   │   └── SoundGenerator.ts        # Web Audio API sound effects
-│   ├── scenes/
-│   │   ├── BootScene.ts             # Asset loading scene
-│   │   ├── MenuScene.ts             # Main menu with ship/laser selection
-│   │   └── GameScene.ts             # Main game logic (2300+ lines)
-├── components/
-│   ├── Game.tsx                     # React wrapper with gesture control
-│   └── WebcamOverlay.tsx            # Real-time hand tracking visualization
-└── App.tsx                          # Main application component
+.kiro/
+├── specs/                          # Project specifications
+│   └── space-invaders-game/
+│       ├── requirements.md         # Feature requirements & acceptance criteria
+│       ├── design.md              # System design & architecture
+│       └── tasks.md               # Implementation plan & task list
+├── steering/                       # Development guidelines & best practices
+│   ├── project-standards.md       # Code style & conventions
+│   ├── architecture-guide.md      # System architecture & patterns
+│   └── gesture-recognition-guide.md # Gesture recognition implementation
+├── settings/                       # Project configuration
+│   └── project.json               # Project metadata & settings
+└── README.md                       # This file
 ```
 
-## 🛠️ Technologies Used
+## Quick Start
+
+### 1. Understanding the Project
+
+Start by reading these documents in order:
+
+1. **[README.md](../README.md)** - Project overview and features
+2. **[requirements.md](specs/space-invaders-game/requirements.md)** - What the game should do
+3. **[design.md](specs/space-invaders-game/design.md)** - How the game is built
+4. **[tasks.md](specs/space-invaders-game/tasks.md)** - Implementation tasks
+
+### 2. Development Setup
+
+1. Install dependencies: `npm install`
+2. Start dev server: `npm run dev`
+3. Open browser: `http://localhost:5173`
+
+### 3. Following Development Guidelines
+
+Before writing code, review:
+
+1. **[project-standards.md](steering/project-standards.md)** - Code style and conventions
+2. **[architecture-guide.md](steering/architecture-guide.md)** - System architecture
+3. **[gesture-recognition-guide.md](steering/gesture-recognition-guide.md)** - Gesture implementation
+
+## Document Overview
+
+### Specifications
+
+#### requirements.md
+- **Purpose:** Define what the game should do
+- **Content:** 10 requirements with user stories and acceptance criteria
+- **Format:** EARS (Easy Approach to Requirements Syntax)
+- **Use:** Reference when implementing features
+
+#### design.md
+- **Purpose:** Explain how the game is built
+- **Content:** Architecture, components, data models, correctness properties
+- **Sections:** Overview, Architecture, Components, Data Models, Properties, Error Handling, Testing
+- **Use:** Understand system design before implementation
+
+#### tasks.md
+- **Purpose:** Break down implementation into manageable tasks
+- **Content:** 39 core tasks + 25 optional testing tasks
+- **Organization:** 15 phases from setup to final integration
+- **Use:** Track progress and execute tasks incrementally
+
+### Steering Guides
+
+#### project-standards.md
+- **Purpose:** Establish code quality standards
+- **Content:** TypeScript conventions, React patterns, Phaser standards, naming conventions
+- **Sections:** Code Style, Naming, Quality, Git Workflow, Browser Support, Performance, Accessibility
+- **Use:** Reference when writing code
+
+#### architecture-guide.md
+- **Purpose:** Explain system architecture and design patterns
+- **Content:** Component responsibilities, data flow, state management, communication patterns
+- **Sections:** Architecture, Components, Data Flow, State Management, Extension Points, Performance, Testing
+- **Use:** Understand how components interact
+
+#### gesture-recognition-guide.md
+- **Purpose:** Explain gesture recognition implementation
+- **Content:** Hand pose detection, gesture algorithms, integration, debugging
+- **Sections:** Basics, Implementation, Integration, Visualization, Troubleshooting, Optimization
+- **Use:** Implement and debug gesture features
+
+### Settings
+
+#### project.json
+- **Purpose:** Store project metadata and configuration
+- **Content:** Project info, technologies, structure, metrics
+- **Use:** Reference for project overview
+
+## Key Concepts
+
+### Requirements (10 Total)
+
+1. **Core Gameplay** - Player ship, enemies, shooting, collision
+2. **Progressive Levels** - 5 levels with increasing difficulty
+3. **Gesture Recognition** - Hand pose detection and gesture controls
+4. **Power-Up System** - Rapid Fire, Shield, Speed Boost
+5. **Customization** - 16 ships, 8 lasers
+6. **Audio System** - Procedural sound effects and background music
+7. **UI & Menus** - Menu system, HUD, pause menu
+8. **Collision Detection** - Physics and collision handling
+9. **Hand Detection** - Hand landmark processing and gesture analysis
+10. **State Management** - Scene transitions and game state
+
+### Correctness Properties (12 Total)
+
+Each property is a formal statement about what the system should do:
+
+1. Enemy Destruction Consistency
+2. Lives Reduction on Damage
+3. Level Progression Trigger
+4. Hand Detection Gesture Mapping
+5. Palm State Finger Counting
+6. Power-Up Activation Energy Deduction
+7. Shield Damage Prevention
+8. Speed Boost Movement Multiplier
+9. Rapid Fire Rate Reduction
+10. Game Over Condition
+11. Gesture State Confidence Threshold
+12. Audio Context Resume on Interaction
+
+### Implementation Phases (15 Total)
+
+1. Project Setup & Infrastructure
+2. Menu System & Customization
+3. Core Game Scene & Player Mechanics
+4. Game Logic & Scoring
+5. Power-Up System
+6. Audio System
+7. Gesture Recognition System
+8. Gesture-Based Game Controls
+9. Webcam Overlay & Visualization
+10. UI & Game State Management
+11. Gesture Control UI & Integration
+12. Enemy AI & Firing
+13. Level Transitions & Animations
+14. Testing & Validation
+15. Final Integration & Polish
+
+## Development Workflow
+
+### Before Starting a Task
+
+1. Read the task description in `tasks.md`
+2. Review related requirements in `requirements.md`
+3. Check design details in `design.md`
+4. Review relevant steering guide
+5. Check project standards for code style
+
+### While Implementing
+
+1. Follow code style from `project-standards.md`
+2. Follow architecture patterns from `architecture-guide.md`
+3. Write tests as specified in task
+4. Update HUD/UI as needed
+5. Test in browser frequently
+
+### After Completing a Task
+
+1. Run linter: `npm run lint`
+2. Run tests: `npm run test`
+3. Test in browser: `npm run dev`
+4. Check for console errors
+5. Commit with descriptive message
+
+## Testing Strategy
+
+### Unit Tests
+- Test individual game mechanics
+- Test gesture recognition logic
+- Test power-up calculations
+- Target: 80%+ coverage
+
+### Property-Based Tests
+- Generate random game states
+- Verify properties hold across variations
+- Run 100+ iterations per property
+- Use fast-check library
+
+### Integration Tests
+- Test scene transitions
+- Test gesture controller with game
+- Test audio playback
+- Test pause/resume
+
+## Performance Targets
+
+- **Game FPS:** 60 FPS on modern devices
+- **Gesture Detection:** 30 FPS minimum
+- **Memory Usage:** < 100MB during gameplay
+- **Load Time:** < 3 seconds initial load
+- **Level Transition:** < 1 second
+
+## Browser Support
+
+- Chrome 90+
+- Firefox 88+
+- Edge 90+
+- Safari 14+ (limited gesture support)
+
+## Key Technologies
 
 - **React 18** - UI framework
 - **TypeScript** - Type-safe development
 - **Phaser 3** - Game engine
-- **TensorFlow.js** - Machine learning framework
-- **MediaPipe Hands** - Hand pose detection model
-- **Web Audio API** - Procedural sound effects
-- **Vite** - Build tool and dev server
-- **AWS Amplify** - Backend infrastructure (optional)
+- **TensorFlow.js** - Machine learning
+- **MediaPipe Hands** - Hand pose detection
+- **Web Audio API** - Procedural sound
+- **Vite** - Build tool
 
-## 📊 Level System
+## Common Tasks
 
-The game features 5 progressive levels, each with increasing difficulty:
+### Adding a New Feature
 
-| Level | Rows | Enemies | Speed | Fire Rate | Background |
-|-------|------|---------|-------|-----------|------------|
-| 1 | 4 | 32 | 0.30 | 1500ms | Blue/Purple planets |
-| 2 | 5 | 40 | 0.45 | 1350ms | Multiple planets |
-| 3 | 6 | 48 | 0.60 | 1200ms | Dense planet field |
-| 4 | 6 | 48 | 0.75 | 1050ms | Large planets |
-| 5 | 6 | 48 | 0.90 | 900ms | Epic final scene |
+1. Add requirement to `requirements.md`
+2. Add design details to `design.md`
+3. Add correctness property to `design.md`
+4. Add tasks to `tasks.md`
+5. Implement following standards
+6. Write tests
+7. Update documentation
 
-## ⚖️ Game Balance
+### Debugging Gesture Recognition
 
-The game has been carefully balanced for an enjoyable experience:
-- **Player movement speed:** 200 px/s (300 px/s with Speed Boost)
-- **Player bullet speed:** 350 px/s
-- **Enemy bullet speed:** 180 px/s
-- **Fire rate:** 250ms cooldown (125ms with Rapid Fire)
-- **Shield duration:** 8 seconds
-- **Rapid Fire duration:** 10 seconds
-- **Speed Boost duration:** 12 seconds
+1. Check `gesture-recognition-guide.md` troubleshooting section
+2. Enable gesture overlay visualization
+3. Check console for errors
+4. Verify hand landmarks in console
+5. Test with different lighting/hand positions
 
-## 🎵 Audio System
+### Optimizing Performance
 
-### Background Music
-- **Track:** Mountain Trails
-- **Format:** WAV (high quality)
-- **Volume:** 50%
-- **Looping:** Continuous during gameplay
-- **Auto-stop:** Stops on game over
+1. Profile with browser DevTools
+2. Check `architecture-guide.md` optimization strategies
+3. Use object pooling for frequently created objects
+4. Optimize gesture detection frequency
+5. Use WebGL renderer
 
-### Sound Effects
-- **Laser shots** - Frequency sweep from 900Hz to 400Hz
-- **Explosions** - Multi-layer synthesis with filter sweeps
-- **Hit feedback** - Square wave with exponential decay
-- **Enemy shots** - Triangle wave variant
-- **All effects:** Procedurally generated in real-time
+### Adding a New Power-Up
 
-## 🤖 AI Hand Gesture Recognition
+1. Add to requirements
+2. Add to design
+3. Add state variables to GameScene
+4. Implement activation method
+5. Implement effect in update loop
+6. Add UI display
+7. Add keyboard/gesture activation
+8. Write tests
 
-### How It Works
-1. **Hand Detection:** Uses MediaPipe Hands model to detect hand landmarks
-2. **Gesture Recognition:** Analyzes hand position and finger extension
-3. **Real-time Processing:** Runs at 30+ FPS for smooth gameplay
-4. **Visual Feedback:** Shows hand position and gesture state in overlay
+## Useful Commands
 
-### Gesture States
-- **Hand Position:** Normalized X/Y coordinates (0-1 range)
-- **Move Direction:** Left, Right, or Center (with dead zone)
-- **Palm State:** Open (3+ fingers) or Closed (fist)
-- **Hand Height:** High, Middle, or Low
-- **Finger Count:** 0-5 extended fingers
-- **Confidence Score:** 0-1 detection confidence
+```bash
+# Development
+npm run dev          # Start dev server
+npm run build        # Build for production
+npm run preview      # Preview production build
+npm run lint         # Run linter
 
-### Technical Details
-- **Model:** MediaPipe Hands (Full model)
-- **Backend:** WebGL (TensorFlow.js)
-- **Input:** 640x480 video stream
-- **Output:** 21 hand landmarks per hand
-- **Max hands:** 1 (single-hand control)
+# Testing
+npm run test         # Run tests
+npm run test:watch   # Run tests in watch mode
+npm run test:coverage # Generate coverage report
+```
 
-## 🎨 Menu System
+## Resources
 
-### Main Menu Features
-- **Ship Selection:** 16 variants with live preview
-- **Laser Selection:** 8 types with visual preview
-- **Keyboard Navigation:** Arrow keys to select
-- **Mouse Support:** Click to select or start
-- **Animated UI:** Smooth transitions and effects
-- **Instructions:** Built-in control guide
+### External Documentation
+- [Phaser 3 Documentation](https://photonstorm.github.io/phaser3-docs/)
+- [React Documentation](https://react.dev/)
+- [TypeScript Documentation](https://www.typescriptlang.org/docs/)
+- [TensorFlow.js Documentation](https://js.tensorflow.org/)
+- [MediaPipe Hands](https://google.github.io/mediapipe/solutions/hands)
+- [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
 
-## 🏆 Game States
+### Game Assets
+- [Kenney Space Invaders Redux](https://kenney.nl/assets/space-invaders-redux)
+- [Kenney Planets](https://kenney.nl/assets/planets)
+- [Kenney Space Invaders Extension](https://kenney.nl/assets/space-invaders-extension)
 
-- **Boot Scene:** Asset loading with progress bar
-- **Menu Scene:** Ship/laser selection and instructions
-- **Game Scene:** Main gameplay with all mechanics
-- **Pause Menu:** Resume, Restart, or Main Menu options
-- **Game Over:** Score display and restart option
-- **Victory Screen:** Completion message and stats
+## Support and Questions
 
-## 🐛 Troubleshooting
-
-### Gesture Control Not Working
-- Ensure camera permissions are granted
+### Debugging
 - Check browser console for errors
-- Verify WebGL support in your browser
-- Try a different browser (Chrome/Firefox recommended)
+- Use browser DevTools for profiling
+- Enable Phaser debug mode for physics visualization
+- Check gesture overlay for hand detection issues
 
-### Audio Issues
-- Check browser volume settings
-- Ensure Web Audio API is supported
-- Try refreshing the page
-- Check browser autoplay policies
+### Common Issues
+- **Gesture not working:** Check camera permissions and lighting
+- **Low FPS:** Disable gesture control or close other tabs
+- **Audio not playing:** Check browser autoplay policies
+- **Assets not loading:** Verify asset paths in BootScene
 
-### Performance Issues
-- Disable gesture control if experiencing lag
-- Close other browser tabs
-- Update your graphics drivers
-- Try a different browser
+## Next Steps
 
-## 📝 License
+1. Read `requirements.md` to understand features
+2. Read `design.md` to understand architecture
+3. Review `project-standards.md` for code style
+4. Start with Phase 1 tasks in `tasks.md`
+5. Follow development workflow for each task
 
-This game template is licensed under the MIT-0 License.
+---
 
-## 🙏 Credits
-
-- **Game Assets:** Kenney (kenney.nl)
-- **Game Engine:** Phaser (phaser.io)
-- **Hand Detection:** MediaPipe (google.com/mediapipe)
-- **ML Framework:** TensorFlow.js (tensorflow.org/js)
-- **Audio:** Web Audio API (MDN)
+**Last Updated:** December 2024
+**Project Version:** 1.0.0
+**Status:** In Development
