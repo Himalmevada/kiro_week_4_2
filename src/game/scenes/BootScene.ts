@@ -6,10 +6,34 @@ export class BootScene extends Phaser.Scene {
   }
 
   preload() {
-    // Load player ship
+    // Load player ships - multiple variants for selection
+    this.load.image('playerShip1_blue', '/kenney_space-shooter-redux/PNG/playerShip1_blue.png');
+    this.load.image('playerShip1_green', '/kenney_space-shooter-redux/PNG/playerShip1_green.png');
+    this.load.image('playerShip1_orange', '/kenney_space-shooter-redux/PNG/playerShip1_orange.png');
+    this.load.image('playerShip1_red', '/kenney_space-shooter-redux/PNG/playerShip1_red.png');
+    this.load.image('playerShip2_blue', '/kenney_space-shooter-redux/PNG/playerShip2_blue.png');
+    this.load.image('playerShip2_green', '/kenney_space-shooter-redux/PNG/playerShip2_green.png');
+    this.load.image('playerShip2_orange', '/kenney_space-shooter-redux/PNG/playerShip2_orange.png');
+    this.load.image('playerShip2_red', '/kenney_space-shooter-redux/PNG/playerShip2_red.png');
+    this.load.image('playerShip3_blue', '/kenney_space-shooter-redux/PNG/playerShip3_blue.png');
+    this.load.image('playerShip3_green', '/kenney_space-shooter-redux/PNG/playerShip3_green.png');
+    this.load.image('playerShip3_orange', '/kenney_space-shooter-redux/PNG/playerShip3_orange.png');
+    this.load.image('playerShip3_red', '/kenney_space-shooter-redux/PNG/playerShip3_red.png');
+
+    // Keep default 'player' key for backward compatibility
     this.load.image('player', '/assets/ships/playerShip1_blue.png');
 
-    // Load lasers
+    // Load lasers - multiple variants for selection
+    this.load.image('laserBlue01', '/assets/lasers/laserBlue01.png');
+    this.load.image('laserBlue03', '/assets/lasers/laserBlue03.png');
+    this.load.image('laserBlue08', '/assets/lasers/laserBlue08.png');
+    this.load.image('laserBlue16', '/assets/lasers/laserBlue16.png');
+    this.load.image('laserRed01', '/assets/lasers/laserRed01.png');
+    this.load.image('laserRed03', '/assets/lasers/laserRed03.png');
+    this.load.image('laserRed08', '/assets/lasers/laserRed08.png');
+    this.load.image('laserRed16', '/assets/lasers/laserRed16.png');
+
+    // Keep default laser keys for compatibility
     this.load.image('laserBlue', '/assets/lasers/laserBlue01.png');
     this.load.image('laserRed', '/assets/lasers/laserRed01.png');
 
@@ -36,6 +60,18 @@ export class BootScene extends Phaser.Scene {
     this.load.image('meteorGrey1', '/kenney_space-shooter-redux/PNG/Meteors/meteorGrey_big1.png');
     this.load.image('meteorGrey2', '/kenney_space-shooter-redux/PNG/Meteors/meteorGrey_med1.png');
     this.load.image('meteorGrey3', '/kenney_space-shooter-redux/PNG/Meteors/meteorGrey_small1.png');
+
+    // Load power-ups
+    this.load.image('powerupShield', '/kenney_space-shooter-redux/PNG/Power-ups/powerupBlue_shield.png');
+    this.load.image('powerupBolt', '/kenney_space-shooter-redux/PNG/Power-ups/bolt_gold.png');
+    this.load.image('powerupStar', '/kenney_space-shooter-redux/PNG/Power-ups/star_gold.png');
+    this.load.image('powerupHealth', '/kenney_space-shooter-redux/PNG/Power-ups/pill_green.png');
+
+    // Load UFOs (special enemies)
+    this.load.image('ufoRed', '/kenney_space-shooter-redux/PNG/ufoRed.png');
+    this.load.image('ufoGreen', '/kenney_space-shooter-redux/PNG/ufoGreen.png');
+    this.load.image('ufoBlue', '/kenney_space-shooter-redux/PNG/ufoBlue.png');
+    this.load.image('ufoYellow', '/kenney_space-shooter-redux/PNG/ufoYellow.png');
 
     // Load background
     this.load.image('background', '/assets/backgrounds/darkPurple.png');

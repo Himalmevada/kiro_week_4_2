@@ -9,47 +9,89 @@ export class SoundGenerator {
   }
 
   playShootSound() {
+    // Resume audio context if suspended (browser autoplay policy)
+    if (this.audioContext.state === 'suspended') {
+      this.audioContext.resume();
+    }
+
+    const now = this.audioContext.currentTime;
     const oscillator = this.audioContext.createOscillator();
     const gainNode = this.audioContext.createGain();
 
     oscillator.connect(gainNode);
     gainNode.connect(this.audioContext.destination);
 
-    oscillator.frequency.setValueAtTime(800, this.audioContext.currentTime);
-    oscillator.frequency.exponentialRampToValueAtTime(400, this.audioContext.currentTime + 0.1);
+    oscillator.frequency.setValueAtTime(900, now);
+    oscillator.frequency.exponentialRampToValueAtTime(400, now + 0.1);
 
-    gainNode.gain.setValueAtTime(0.3, this.audioContext.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.1);
+    gainNode.gain.setValueAtTime(0.5, now);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
 
-    oscillator.start(this.audioContext.currentTime);
-    oscillator.stop(this.audioContext.currentTime + 0.1);
+    oscillator.start(now);
+    oscillator.stop(now + 0.1);
   }
 
   playExplosionSound() {
-    const oscillator = this.audioContext.createOscillator();
-    const gainNode = this.audioContext.createGain();
+    // Resume audio context if suspended (browser autoplay policy)
+    if (this.audioContext.state === 'suspended') {
+      this.audioContext.resume();
+    }
+
+    // Create multiple layers for a richer explosion sound
+    const now = this.audioContext.currentTime;
+
+    // Layer 1: Deep boom
+    const boom = this.audioContext.createOscillator();
+    const boomGain = this.audioContext.createGain();
+    boom.connect(boomGain);
+    boomGain.connect(this.audioContext.destination);
+    boom.type = 'sine';
+    boom.frequency.setValueAtTime(120, now);
+    boom.frequency.exponentialRampToValueAtTime(40, now + 0.3);
+    boomGain.gain.setValueAtTime(0.8, now);
+    boomGain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+    boom.start(now);
+    boom.stop(now + 0.3);
+
+    // Layer 2: Mid-range explosion body
+    const explosion = this.audioContext.createOscillator();
+    const explosionGain = this.audioContext.createGain();
     const filter = this.audioContext.createBiquadFilter();
-
-    oscillator.connect(filter);
-    filter.connect(gainNode);
-    gainNode.connect(this.audioContext.destination);
-
-    oscillator.type = 'sawtooth';
-    oscillator.frequency.setValueAtTime(200, this.audioContext.currentTime);
-    oscillator.frequency.exponentialRampToValueAtTime(50, this.audioContext.currentTime + 0.3);
-
+    explosion.connect(filter);
+    filter.connect(explosionGain);
+    explosionGain.connect(this.audioContext.destination);
+    explosion.type = 'sawtooth';
+    explosion.frequency.setValueAtTime(250, now);
+    explosion.frequency.exponentialRampToValueAtTime(60, now + 0.4);
     filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(800, this.audioContext.currentTime);
-    filter.frequency.exponentialRampToValueAtTime(100, this.audioContext.currentTime + 0.3);
+    filter.frequency.setValueAtTime(1200, now);
+    filter.frequency.exponentialRampToValueAtTime(150, now + 0.4);
+    explosionGain.gain.setValueAtTime(0.6, now);
+    explosionGain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+    explosion.start(now);
+    explosion.stop(now + 0.4);
 
-    gainNode.gain.setValueAtTime(0.4, this.audioContext.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.3);
-
-    oscillator.start(this.audioContext.currentTime);
-    oscillator.stop(this.audioContext.currentTime + 0.3);
+    // Layer 3: High-frequency crackle for impact
+    const crackle = this.audioContext.createOscillator();
+    const crackleGain = this.audioContext.createGain();
+    crackle.connect(crackleGain);
+    crackleGain.connect(this.audioContext.destination);
+    crackle.type = 'square';
+    crackle.frequency.setValueAtTime(800, now);
+    crackle.frequency.exponentialRampToValueAtTime(200, now + 0.15);
+    crackleGain.gain.setValueAtTime(0.4, now);
+    crackleGain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+    crackle.start(now);
+    crackle.stop(now + 0.15);
   }
 
   playHitSound() {
+    // Resume audio context if suspended (browser autoplay policy)
+    if (this.audioContext.state === 'suspended') {
+      this.audioContext.resume();
+    }
+
+    const now = this.audioContext.currentTime;
     const oscillator = this.audioContext.createOscillator();
     const gainNode = this.audioContext.createGain();
 
@@ -57,31 +99,38 @@ export class SoundGenerator {
     gainNode.connect(this.audioContext.destination);
 
     oscillator.type = 'square';
-    oscillator.frequency.setValueAtTime(150, this.audioContext.currentTime);
-    oscillator.frequency.exponentialRampToValueAtTime(50, this.audioContext.currentTime + 0.2);
+    oscillator.frequency.setValueAtTime(200, now);
+    oscillator.frequency.exponentialRampToValueAtTime(50, now + 0.25);
 
-    gainNode.gain.setValueAtTime(0.5, this.audioContext.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.2);
+    gainNode.gain.setValueAtTime(0.7, now);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
 
-    oscillator.start(this.audioContext.currentTime);
-    oscillator.stop(this.audioContext.currentTime + 0.2);
+    oscillator.start(now);
+    oscillator.stop(now + 0.25);
   }
 
   playEnemyShootSound() {
+    // Resume audio context if suspended (browser autoplay policy)
+    if (this.audioContext.state === 'suspended') {
+      this.audioContext.resume();
+    }
+
+    const now = this.audioContext.currentTime;
     const oscillator = this.audioContext.createOscillator();
     const gainNode = this.audioContext.createGain();
 
     oscillator.connect(gainNode);
     gainNode.connect(this.audioContext.destination);
 
-    oscillator.frequency.setValueAtTime(300, this.audioContext.currentTime);
-    oscillator.frequency.exponentialRampToValueAtTime(200, this.audioContext.currentTime + 0.15);
+    oscillator.type = 'triangle';
+    oscillator.frequency.setValueAtTime(350, now);
+    oscillator.frequency.exponentialRampToValueAtTime(200, now + 0.15);
 
-    gainNode.gain.setValueAtTime(0.25, this.audioContext.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.15);
+    gainNode.gain.setValueAtTime(0.35, now);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
 
-    oscillator.start(this.audioContext.currentTime);
-    oscillator.stop(this.audioContext.currentTime + 0.15);
+    oscillator.start(now);
+    oscillator.stop(now + 0.15);
   }
 
   startBackgroundMusic() {
