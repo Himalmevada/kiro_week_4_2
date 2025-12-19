@@ -12,7 +12,6 @@ export class GameScene extends Phaser.Scene {
   // Gesture controls
   private gestureController: HandGestureController | null = null;
   private gesturesEnabled = false;
-  private lastGestureShield = false;
   private lastFingerCount = 0;
   private score = 0;
   private lives = 3;
